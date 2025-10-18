@@ -1,0 +1,13 @@
+[requires]
+rcgg-nexus-api/v6.1
+nlohmann_json/3.12.0
+cpp-httplib/0.20.1
+enum-flags/0.1a
+imgui/1.80
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[layout]
+cmake_layout
