@@ -11,3 +11,4 @@ Trendy Achievements Suggestion addon substitutes game's default "Nearly Complete
 1. Dynamic checks for active special events
 2. Hide dropdown selection for type of recommendations - disfunctional when addon is active
 3. Dynamic checks for Character Adventure Guide type achievements
+4. List of suggested achievements for exclusions in configuration with names

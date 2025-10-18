@@ -25,7 +25,7 @@ AddonDefinition *GetAddonDef()
         .Name = "Trendy Achievement Suggestions",
         .Version = AddonVersion{ADDON_VERSION_MAJOR, ADDON_VERSION_MINOR, ADDON_VERSION_PATCH, ADDON_VERSION_REVISION},
         .Author = "Vonsh.1427",
-        .Description = "",
+        .Description = "Substitutes game's achievement recommendations with the topmost unlocked by playerbase",
         .Load = AddonLoad,
         .Unload = AddonUnload,
         .Flags = EAddonFlags_None,
