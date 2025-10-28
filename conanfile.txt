@@ -5,6 +5,10 @@ cpp-httplib/0.20.1
 enum-flags/0.1a
 imgui/1.80
 
+[tool_requires]
+cmake/3.31.5
+make/4.4.1
+
 [generators]
 CMakeDeps
 CMakeToolchain
