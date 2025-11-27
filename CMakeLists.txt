@@ -30,8 +30,7 @@ file(DOWNLOAD
 
 file(READ ${FALLBACK_DATA} FALLBACK_DATA_CONTENTS)
 
-file(WRITE ${CMAKE_BINARY_DIR}/include/FallbackData.hpp "
-// Auto-generated header. Do not edit manually.
+file(WRITE ${CMAKE_BINARY_DIR}/include/FallbackData.hpp "// Auto-generated header. Do not edit manually.
 #pragma once
 
 static const char* UNLOCKS_DATA = R\"(${FALLBACK_DATA_CONTENTS})\";
