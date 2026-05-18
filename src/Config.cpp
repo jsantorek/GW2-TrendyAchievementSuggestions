@@ -27,6 +27,19 @@ NLOHMANN_JSON_SERIALIZE_ENUM(RepeatableAchievementsHandling,
                                   "ExcludeAfterFirstCompletion"},
                                  {RepeatableAchievementsHandling::ExcludeWhenPointCapped, "ExcludeWhenPointCapped"},
                              })
+NLOHMANN_JSON_SERIALIZE_ENUM(MasteryPointHandling,
+                             {
+                                 {MasteryPointHandling::IncludeAny, "IncludeAny"},
+                                 {MasteryPointHandling::IncludeOnlyCentralTyria, "IncludeOnlyCentralTyria"},
+                                 {MasteryPointHandling::IncludeOnlyHeartOfThorns, "IncludeOnlyHeartOfThorns"},
+                                 {MasteryPointHandling::IncludeOnlyPathOfFire, "IncludeOnlyPathOfFire"},
+                                 {MasteryPointHandling::IncludeOnlyIcebroodSaga, "IncludeOnlyIcebroodSaga"},
+                                 {MasteryPointHandling::IncludeOnlyEndOfDragons, "IncludeOnlyEndOfDragons"},
+                                 {MasteryPointHandling::IncludeOnlySecretsOfTheObscure,
+                                  "IncludeOnlySecretsOfTheObscure"},
+                                 {MasteryPointHandling::IncludeOnlyJanthirWilds, "IncludeOnlyJanthirWilds"},
+                                 {MasteryPointHandling::IncludeOnlyVisionsOfEternity, "IncludeOnlyVisionsOfEternity"},
+                             })
 
 void Config::Load()
 {
@@ -39,6 +52,10 @@ void Config::Load()
         json.at("AdventureGuidePrioritized").get_to(G::Trends->AdventureGuidePrioritized);
         json.at("SeasonalAchievementsHandling").get_to(G::Exclusions->SeasonalAchievements);
         json.at("RepeatableAchievementsHandling").get_to(G::Exclusions->RepeatableAchievements);
+        if (json.contains("MasteryPoints"))
+            json.at("MasteryPoints").get_to(G::Exclusions->MasteryPoints.value());
+        else
+            G::Exclusions->MasteryPoints = std::nullopt;
     }
     G::Trends->Refresh();
 }
@@ -53,6 +70,10 @@ void Config::Save()
     json["SeasonalAchievementsHandling"] = G::Exclusions->SeasonalAchievements;
     json["RepeatableAchievementsHandling"] = G::Exclusions->RepeatableAchievements;
     json["AdventureGuidePrioritized"] = G::Trends->AdventureGuidePrioritized;
+    if (G::Exclusions->MasteryPoints.has_value())
+    {
+        json["MasteryPoints"] = G::Exclusions->MasteryPoints.value();
+    }
     std::ofstream(filepath) << json;
 }
 void Config::Render()
@@ -76,8 +97,46 @@ void Config::Render()
                      SW_SHOW);
     if (ImGui::Checkbox("Adventure guide achievements are prioritized", &G::Trends->AdventureGuidePrioritized))
         G::Trends->Refresh();
-    constexpr std::array<const char *, 3> SeasonalNames = {"Always exclude", "Always include",
-                                                           "Only include Halloween"};
+    static bool OnlyMasteries = G::Exclusions->MasteryPoints.has_value();
+    if (ImGui::Checkbox("Display only achievements with Mastery Point", &OnlyMasteries))
+    {
+        if (OnlyMasteries)
+            G::Exclusions->MasteryPoints = MasteryPointHandling::IncludeAny;
+        else
+            G::Exclusions->MasteryPoints = std::nullopt;
+        Hooks::Invalidate();
+    }
+    if (OnlyMasteries)
+    {
+        constexpr auto MasteryNames = std::array{
+            "Any",
+            "Only Central Tyria",
+            "Only Heart of Thorns",
+            "Only Path of Fire",
+            "Only Icebrood Saga",
+            "Only End of Dragons",
+            "Only Secrets of the Obscure",
+            "Only Janthir Wilds",
+            "Only Visions of Eternity",
+        };
+        if (ImGui::BeginCombo("Masteries are included",
+                              MasteryNames[static_cast<size_t>(G::Exclusions->MasteryPoints.value())]))
+        {
+            for (auto i = 0; i < MasteryNames.size(); i++)
+            {
+                const bool is_selected = G::Exclusions->MasteryPoints == static_cast<MasteryPointHandling>(i);
+                if (ImGui::Selectable(MasteryNames[i], is_selected))
+                {
+                    G::Exclusions->MasteryPoints = static_cast<MasteryPointHandling>(i);
+                    Hooks::Invalidate();
+                }
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+    }
+    constexpr auto SeasonalNames = std::array{"Always exclude", "Always include", "Only include Halloween"};
     if (ImGui::BeginCombo("Seasonal achievements",
                           SeasonalNames[static_cast<size_t>(G::Exclusions->SeasonalAchievements)]))
     {
@@ -92,8 +151,8 @@ void Config::Render()
         }
         ImGui::EndCombo();
     }
-    constexpr std::array<const char *, 3> RepeatableNames = {"Always exclude", "Include until first completion",
-                                                             "Include until AP cap is reached"};
+    constexpr auto RepeatableNames =
+        std::array{"Always exclude", "Include until first completion", "Include until AP cap is reached"};
     if (ImGui::BeginCombo("Repeatable achievements",
                           RepeatableNames[static_cast<size_t>(G::Exclusions->RepeatableAchievements)]))
     {
