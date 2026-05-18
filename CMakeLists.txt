@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5.0...3.31.2)
 find_package(Git)
 execute_process(
     COMMAND
-        ${GIT_EXECUTABLE} -c safe.directory='*' describe --tags --dirty --abbrev=0 --match "v*.*.*"
+        ${GIT_EXECUTABLE} describe --tags --dirty --abbrev=0 --match "v*.*.*"
     WORKING_DIRECTORY
         ${CMAKE_CURRENT_SOURCE_DIR}
     OUTPUT_VARIABLE GIT_DESCRIBE_VERSION
