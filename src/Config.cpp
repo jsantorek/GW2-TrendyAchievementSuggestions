@@ -53,7 +53,7 @@ void Config::Load()
         json.at("SeasonalAchievementsHandling").get_to(G::Exclusions->SeasonalAchievements);
         json.at("RepeatableAchievementsHandling").get_to(G::Exclusions->RepeatableAchievements);
         if (json.contains("MasteryPoints"))
-            json.at("MasteryPoints").get_to(G::Exclusions->MasteryPoints.value());
+            G::Exclusions->MasteryPoints = json.at("MasteryPoints").get<MasteryPointHandling>();
         else
             G::Exclusions->MasteryPoints = std::nullopt;
     }
