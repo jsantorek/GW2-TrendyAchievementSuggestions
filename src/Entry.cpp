@@ -52,7 +52,7 @@ void AddonLoad(AddonAPI *aApi)
     {
         G::Trends = new EfficiencyTrends();
         Config::Load();
-        Hooks::Enable();
+        Hooks::Enable(aApi);
         G::APIDefs->Log(ELogLevel_INFO, ADDON_NAME, "Loaded!");
     }
     catch (const std::exception &e)
