@@ -28,7 +28,12 @@ AddonDefinition *GetAddonDef()
         .Description = "Substitutes game's achievement recommendations with the topmost unlocked by playerbase",
         .Load = AddonLoad,
         .Unload = AddonUnload,
-        .Flags = EAddonFlags_None,
+        .Flags =
+#ifdef _DEBUG
+            EAddonFlags_None,
+#else
+            EAddonFlags_IsVolatile,
+#endif
         .Provider = EUpdateProvider_GitHub,
         .UpdateLink = "https://github.com/jsantorek/GW2-" ADDON_NAME,
     };

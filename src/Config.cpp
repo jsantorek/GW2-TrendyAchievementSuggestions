@@ -56,6 +56,8 @@ void Config::Load()
             G::Exclusions->MasteryPoints = json.at("MasteryPoints").get<MasteryPointHandling>();
         else
             G::Exclusions->MasteryPoints = std::nullopt;
+        if (json.contains("HideEmptyCategories"))
+            G::Exclusions->HideEmptyCategories = json.at("HideEmptyCategories").get<bool>();
     }
     G::Trends->Refresh();
 }
@@ -69,6 +71,7 @@ void Config::Save()
     json["Exclusions"] = G::Exclusions->ExcludedAchievements;
     json["SeasonalAchievementsHandling"] = G::Exclusions->SeasonalAchievements;
     json["RepeatableAchievementsHandling"] = G::Exclusions->RepeatableAchievements;
+    json["HideEmptyCategories"] = G::Exclusions->HideEmptyCategories;
     json["AdventureGuidePrioritized"] = G::Trends->AdventureGuidePrioritized;
     if (G::Exclusions->MasteryPoints.has_value())
     {
@@ -97,6 +100,8 @@ void Config::Render()
                      SW_SHOW);
     if (ImGui::Checkbox("Adventure guide achievements are prioritized", &G::Trends->AdventureGuidePrioritized))
         G::Trends->Refresh();
+    // TODO - force refresh? inform when it will apply?
+    ImGui::Checkbox("Categories with no achievements to complete are hidden", &G::Exclusions->HideEmptyCategories);
     static bool OnlyMasteries = G::Exclusions->MasteryPoints.has_value();
     if (ImGui::Checkbox("Display only achievements with Mastery Point", &OnlyMasteries))
     {

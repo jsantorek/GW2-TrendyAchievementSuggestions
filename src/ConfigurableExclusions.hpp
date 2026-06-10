@@ -34,6 +34,7 @@ struct ConfigurableExclusions
     SeasonalAchievementsHandling SeasonalAchievements = SeasonalAchievementsHandling::AlwaysExclude;
     RepeatableAchievementsHandling RepeatableAchievements = RepeatableAchievementsHandling::ExcludeWhenPointCapped;
     std::optional<MasteryPointHandling> MasteryPoints = std::nullopt;
+    bool HideEmptyCategories = false;
     std::unordered_set<uint32_t> ExcludedAchievements;
     bool IsSeasonalCategoryExcluded(uint32_t);
     bool IsAchievementExcluded(uint32_t);

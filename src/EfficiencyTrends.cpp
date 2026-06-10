@@ -57,7 +57,9 @@ void EfficiencyTrends::PrioritizeAdventureGuide()
                         "Content context missing - unable to find Character Adventure Guide achievements");
         return;
     }
-    const auto CharacterAdventureGuideGroup = GW2RE::GUID_t("EFADEE67-588F-412F-A1BD-6C9AFF782988");
+
+    // https://api.guildwars2.com/v2/achievements/groups/EFADEE67-588F-412F-A1BD-6C9AFF782988
+    const auto CharacterAdventureGuideGroup = GW2RE::GUID_t(0xEFADEE67, 0x412F588F, 0x9A6CBDA1, 0x882978FF);
     auto cat = ctx.GetContentStream<GW2RE::AchievementCategoryDef_t>(GW2RE::EContentType::AchievementCategoryDef);
     while (auto c = cat.next())
     {
