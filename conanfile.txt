@@ -2,7 +2,7 @@
 rcgg-nexus-api/v6.1
 nlohmann_json/3.12.0
 cpp-httplib/0.20.1
-enum-flags/0.1a
+magic_enum/0.9.7
 imgui/1.80
 
 [tool_requires]

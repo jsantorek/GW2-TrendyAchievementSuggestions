@@ -17,7 +17,7 @@ project(TrendyAchievementSuggestions VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
 find_package(rcgg-nexus-api)
 find_package(nlohmann_json)
 find_package(httplib)
-find_package(enumflags)
+find_package(magic_enum)
 find_package(imgui)
 
 set(FALLBACK_DATA "${CMAKE_BINARY_DIR}/fallback_data.json")
@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME}
     rcgg-nexus-api::rcgg-nexus-api
     nlohmann_json::nlohmann_json
     httplib::httplib
-    EnumFlags::EnumFlags
+    magic_enum::magic_enum
     imgui::imgui
     ws2_32
     crypt32

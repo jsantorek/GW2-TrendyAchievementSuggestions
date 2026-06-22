@@ -6,6 +6,8 @@
 #include <filesystem>
 #include <fstream>
 #include <imgui.h>
+#include <magic_enum/magic_enum.hpp>
+#include <magic_enum/magic_enum_flags.hpp>
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -57,7 +59,26 @@ void Config::Load()
         else
             G::Exclusions->MasteryPoints = std::nullopt;
         if (json.contains("HideEmptyCategories"))
-            G::Exclusions->HideEmptyCategories = json.at("HideEmptyCategories").get<bool>();
+        {
+            G::Exclusions->CategoryFilter = json.at("HideEmptyCategories").get<bool>()
+                                                ? CategoryFilterBehaviour::DisplayCategoriesWithAchievements
+                                                : CategoryFilterBehaviour::Disabled;
+        }
+        else if (json.contains("CategoryFilter"))
+        {
+            auto casted =
+                magic_enum::enum_flags_cast<CategoryFilterBehaviour>(json.at("CategoryFilter").get<std::string>());
+            if (casted.has_value() &&
+                (*casted == CategoryFilterBehaviour::Disabled ||
+                 magic_enum::enum_flags_test(*casted, CategoryFilterBehaviour::DisplayCategoriesWithAchievements)))
+            {
+                G::Exclusions->CategoryFilter = casted.value();
+            }
+            else
+            {
+                /* TODO: report failure */
+            }
+        }
     }
     G::Trends->Refresh();
 }
@@ -71,7 +92,7 @@ void Config::Save()
     json["Exclusions"] = G::Exclusions->ExcludedAchievements;
     json["SeasonalAchievementsHandling"] = G::Exclusions->SeasonalAchievements;
     json["RepeatableAchievementsHandling"] = G::Exclusions->RepeatableAchievements;
-    json["HideEmptyCategories"] = G::Exclusions->HideEmptyCategories;
+    json["CategoryFilter"] = magic_enum::enum_flags_name(G::Exclusions->CategoryFilter);
     json["AdventureGuidePrioritized"] = G::Trends->AdventureGuidePrioritized;
     if (G::Exclusions->MasteryPoints.has_value())
     {
@@ -101,7 +122,23 @@ void Config::Render()
     if (ImGui::Checkbox("Adventure guide achievements are prioritized", &G::Trends->AdventureGuidePrioritized))
         G::Trends->Refresh();
     // TODO - force refresh? inform when it will apply?
-    ImGui::Checkbox("Categories with no achievements to complete are hidden", &G::Exclusions->HideEmptyCategories);
+    auto categoriesFiltered = G::Exclusions->CategoryFilter != CategoryFilterBehaviour::Disabled;
+    if (ImGui::Checkbox("Categories with no achievements to complete are hidden", &categoriesFiltered))
+    {
+        G::Exclusions->CategoryFilter = categoriesFiltered ? CategoryFilterBehaviour::Disabled
+                                                           : CategoryFilterBehaviour::DisplayCategoriesWithAchievements;
+    }
+    if (categoriesFiltered)
+    {
+        ImGui::Indent();
+        ImGui::CheckboxFlags("Daily categories are always shown",
+                             reinterpret_cast<int *>(&G::Exclusions->CategoryFilter),
+                             static_cast<int>(CategoryFilterBehaviour::DisplayDailies));
+        ImGui::CheckboxFlags("Festival categories are always shown",
+                             reinterpret_cast<int *>(&G::Exclusions->CategoryFilter),
+                             static_cast<int>(CategoryFilterBehaviour::DisplayFestivals));
+        ImGui::Unindent();
+    }
     static bool OnlyMasteries = G::Exclusions->MasteryPoints.has_value();
     if (ImGui::Checkbox("Display only achievements with Mastery Point", &OnlyMasteries))
     {
