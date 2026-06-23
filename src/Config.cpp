@@ -131,7 +131,7 @@ void Config::Render()
     if (categoriesFiltered)
     {
         ImGui::Indent();
-        ImGui::CheckboxFlags("Daily categories are always shown",
+        ImGui::CheckboxFlags("Daily/weekly categories are always shown",
                              reinterpret_cast<int *>(&G::Exclusions->CategoryFilter),
                              static_cast<int>(CategoryFilterBehaviour::DisplayDailies));
         ImGui::CheckboxFlags("Festival categories are always shown",
