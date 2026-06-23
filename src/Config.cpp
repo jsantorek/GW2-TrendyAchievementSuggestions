@@ -125,8 +125,8 @@ void Config::Render()
     auto categoriesFiltered = G::Exclusions->CategoryFilter != CategoryFilterBehaviour::Disabled;
     if (ImGui::Checkbox("Categories with no achievements to complete are hidden", &categoriesFiltered))
     {
-        G::Exclusions->CategoryFilter = categoriesFiltered ? CategoryFilterBehaviour::Disabled
-                                                           : CategoryFilterBehaviour::DisplayCategoriesWithAchievements;
+        G::Exclusions->CategoryFilter = categoriesFiltered ? CategoryFilterBehaviour::DisplayCategoriesWithAchievements
+                                                           : CategoryFilterBehaviour::Disabled;
     }
     if (categoriesFiltered)
     {
