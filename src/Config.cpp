@@ -164,7 +164,7 @@ void Config::Render()
         if (ImGui::BeginCombo("Masteries are included",
                               MasteryNames[static_cast<size_t>(G::Exclusions->MasteryPoints.value())]))
         {
-            for (auto i = 0; i < MasteryNames.size(); i++)
+            for (auto i = 0u; i < MasteryNames.size(); i++)
             {
                 const bool is_selected = G::Exclusions->MasteryPoints == static_cast<MasteryPointHandling>(i);
                 if (ImGui::Selectable(MasteryNames[i], is_selected))
@@ -182,7 +182,7 @@ void Config::Render()
     if (ImGui::BeginCombo("Seasonal achievements",
                           SeasonalNames[static_cast<size_t>(G::Exclusions->SeasonalAchievements)]))
     {
-        for (auto i = 0; i < SeasonalNames.size(); i++)
+        for (auto i = 0u; i < SeasonalNames.size(); i++)
         {
             const bool is_selected =
                 G::Exclusions->SeasonalAchievements == static_cast<SeasonalAchievementsHandling>(i);
@@ -198,7 +198,7 @@ void Config::Render()
     if (ImGui::BeginCombo("Repeatable achievements",
                           RepeatableNames[static_cast<size_t>(G::Exclusions->RepeatableAchievements)]))
     {
-        for (auto i = 0; i < RepeatableNames.size(); i++)
+        for (auto i = 0u; i < RepeatableNames.size(); i++)
         {
             const bool is_selected =
                 G::Exclusions->RepeatableAchievements == static_cast<RepeatableAchievementsHandling>(i);

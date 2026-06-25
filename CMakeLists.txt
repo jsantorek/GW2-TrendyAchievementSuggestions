@@ -85,6 +85,7 @@ target_compile_definitions(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_BINARY_DIR}/include
         ${RE_INCLUDE_DIRS}
 )
 string(REGEX REPLACE "([a-z0-9])([A-Z])" "\\1_\\2" PROJECT_FILENAME "${PROJECT_NAME}")
